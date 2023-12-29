@@ -1,5 +1,5 @@
 import { userPublicToken, mainSceneUUID, characterControllerSceneUUID, spawnPosition} from './config.js';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useScript } from '@uidotdev/usehooks';
 
 export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
@@ -26,7 +26,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         found = (await SDK3DVerse.engineAPI.findEntitiesByNames('bp2 container'))[0];
         found.setVisibility(false);
     }, []);
-    var handleEnigmaProgression = 0
+    var handleEnigmaProgression = useRef(0)
 
     const setPointerLock = useCallback(async (canvas) => {
         setFPSCameraController(canvas);
@@ -94,9 +94,9 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
             const wbItem = await SDK3DVerse.engineAPI.findEntitiesByNames('wb blueprint '+itemID);
             wbItem[0].setVisibility(true);
             canvas.removeEventListener('keydown', (e) => moveToWorkbench(e, canvas, target));
-            handleEnigmaProgression +=1
-            console.log(handleEnigmaProgression);
-            if(handleEnigmaProgression === 4){
+            handleEnigmaProgression.current +=1
+            console.log(handleEnigmaProgression.current);
+            if(handleEnigmaProgression.current === 4){
                 buildHelicopter()
             }
         }
@@ -182,7 +182,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         // If an object was hit, duplicate it in a scaled verison, handleable by players
         // Camera work
         // Character work
-    }, [takeControl, bluePrintInterract]);
+    }, [takeControl, bluePrintInterract, showLock]);
 
   
     //------------------------------------------------------------------------------
