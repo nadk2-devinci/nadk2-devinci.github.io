@@ -58,5 +58,8 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!(specific-module-to-transform|another-module)/)", "/node_modules/(?!bootstrap)/.+\\.css$"
     ]
+  },
+  "moduleNameMapper": {
+    "\\.(jpg|jpeg|png|gif|svg|css)$": "<rootDir>/__mocks__/fileMock.js"
   }
 }
