@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.048b89fd.css",
-    "main.js": "/static/js/main.e9cffb32.js",
-    "static/js/787.8c0669fe.chunk.js": "/static/js/787.8c0669fe.chunk.js",
+    "main.js": "/static/js/main.98432aac.js",
+    "static/js/651.a858a14a.chunk.js": "/static/js/651.a858a14a.chunk.js",
     "static/media/LeonardDeVinci_Amphi.jpg": "/static/media/LeonardDeVinci_Amphi.b470861703f60908bcd7.jpg",
     "index.html": "/index.html",
     "main.048b89fd.css.map": "/static/css/main.048b89fd.css.map",
-    "main.e9cffb32.js.map": "/static/js/main.e9cffb32.js.map",
-    "787.8c0669fe.chunk.js.map": "/static/js/787.8c0669fe.chunk.js.map"
+    "main.98432aac.js.map": "/static/js/main.98432aac.js.map",
+    "651.a858a14a.chunk.js.map": "/static/js/651.a858a14a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.048b89fd.css",
-    "static/js/main.e9cffb32.js"
+    "static/js/main.98432aac.js"
   ]
 }
