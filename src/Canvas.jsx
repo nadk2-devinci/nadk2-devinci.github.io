@@ -73,7 +73,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         playerValue.position[2]+=2*distance[2];
 
         target.setGlobalTransform(playerValue);
-        SDK3DVerse.engineAPI.fireEvent("191b5072-b834-40f0-a616-88a6fc2bd7a3", "horizontal", [target]);
+        SDK3DVerse.engineAPI.fireEvent("191b5072-b834-40f0-a616-88a6fc2bd7a3", "enter_interaction", [target]);
         focusToEntity(target);
         let canvas = document.getElementById("display-canvas");
         canvas.addEventListener('click', (e) => focusBackToFPC(target, basePosition, canvas, e));
@@ -85,7 +85,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         //SDK3DVerse.engineAPI.registerToEvent("4ac15242-946d-4fec-8256-c516095969d2", "fly", yourFunctionDoodyDude);
     }, []);
 
-    const moveToWorkbench = useCallback(async function (e, canvas, target){
+    const moveToWorkbench = useCallback(async function (e, canvas, target) {
         if(e.code === "Space"){
             SDK3DVerse.engineAPI.fireEvent("2a32b613-d9c1-4ebe-b5a8-7f1b8aa4f754", "enter_interaction", [target]);
             console.log(target);
@@ -127,11 +127,12 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         playerValue.position[2]+=2*distance[2];
 
         target.setGlobalTransform(playerValue);
-        SDK3DVerse.engineAPI.fireEvent("191b5072-b834-40f0-a616-88a6fc2bd7a3", "horizontal", [target]);
+        SDK3DVerse.engineAPI.fireEvent("191b5072-b834-40f0-a616-88a6fc2bd7a3", "enter_interaction", [target]);
         focusToEntity(target);
         
         setTimeout(canvas.addEventListener('click', (e) => {
             focusBackToFPC(target, basePosition, canvas, e);
+            target.setGlobalTransform(basePosition);
             canvas.removeEventListener('keydown', moveHandler);
             SDK3DVerse.actionMap.values["JUMP"] = [["KEY_32"]];
             SDK3DVerse.actionMap.propagate();
@@ -154,23 +155,24 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         if(e.button === 0){
             // Screen Space Ray on the middle of the screen
             // This stores an [object Promise] in the JS variable
-            let objectClicked = await SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width/2, canvas.height/2, true, false, false);
-            console.log(objectClicked.entity.getComponent("debug_name"))
-            if(objectClicked.entity != null)
-            {
-                console.log(objectClicked.entity);
-                if(objectClicked.entity.isAttached('script_map') ) { 
-                    if("2a32b613-d9c1-4ebe-b5a8-7f1b8aa4f754" in objectClicked.entity.getComponent('script_map').elements){
-                        console.log("yep");
-                        bluePrintInterract(objectClicked,);
-                        
-                    }else if(("4002db8b-f68b-4d85-bc12-988b6afabbfe" in objectClicked.entity.getComponent('script_map').elements)||("0c9049c1-d280-48ed-9cca-e5c56957cd63" in objectClicked.entity.getComponent('script_map').elements)){
-                        takeControl(objectClicked,);
-                    }
-                } else if (objectClicked.entity.getComponent("debug_name").value === "Code") {
-                    console.log("Is Lock")
-                    showLock();
+            let objectClicked = await SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width/2, canvas.height/2, false, false, false);
+            //console.log(objectClicked.entity.getComponent("debug_name"))
+            if (objectClicked) {
+                if (objectClicked.entity != null) {
+                    console.log(objectClicked.entity);
+                    if (objectClicked.entity.isAttached('script_map')) {
+                        SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width / 2, canvas.height / 2, true, false, false);
+                        if ("2a32b613-d9c1-4ebe-b5a8-7f1b8aa4f754" in objectClicked.entity.getComponent('script_map').elements) {
+                            bluePrintInterract(objectClicked,);
+                        } else if ("d6b25d06-9387-4cc8-932e-d4f6eeffbcbd" in objectClicked.entity.getComponent('script_map').elements) {
+                            takeControl(objectClicked,);
+                        }
+                    } else if (objectClicked.entity.getComponent("debug_name").value === "Code") {
+                        SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width / 2, canvas.height / 2, true, false, false);
+                        console.log("Is Lock")
+                        showLock();
 
+                    }
                 }
             }
             else
@@ -250,7 +252,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         });
         
         // Set the action map
-        SDK3DVerse.actionMap.values["JUMP"] = [["KEY_32"]];
+        SDK3DVerse.actionMap.values["SPRINT"] = [["KEY_16"]];
         SDK3DVerse.actionMap.propagate();
 
         // Lock the camera on mouse click

@@ -39,6 +39,7 @@ export function Cadena({ show, setShow }) {
 
         if (firstCodeNumber === "1" && secondCodeNumber === "4" && thirdCodeNumber === "5" && fourthCodeNumber === "2") {
             console.log("ouvert");
+            openChest();
             unlocked.play();
             handleClose();
             window.SDK3DVerse.engineAPI.assignClientToScripts(window.clientController);
@@ -91,3 +92,18 @@ export function Cadena({ show, setShow }) {
         </>
     );
 };
+
+
+
+async function openChest(){
+    //const animTemplate = new SDK3DVerse.EntityTemplate();
+    //animTemplate.attachComponent("scene_ref", { value: "0c8e7a7e-4eeb-48c9-90cc-a67b768aac0c" });
+    //const chestSceneEntity = await animTemplate.instantiateTransientEntity(
+    //    "Chest",
+    //    null,
+    //    true
+    //);
+    const chestSceneEntity = await SDK3DVerse.engineAPI.findEntitiesByNames('chest');
+    await console.log(chestSceneEntity);
+    await SDK3DVerse.engineAPI.playAnimationSequence("a16461db-aa16-4e2e-8cb0-fe123a6d8d7c", { playbackSpeed: 1, seekOffset: 0 }, chestSceneEntity[0]);
+}
