@@ -1,6 +1,9 @@
 import { userPublicToken, mainSceneUUID, characterControllerSceneUUID, spawnPosition} from './config.js';
 import { useCallback, useEffect } from 'react';
 import { useScript } from '@uidotdev/usehooks';
+import "./travelAnimation.js";
+import { NintendoSwitch } from 'react-bootstrap-icons';
+import TravelAnimation from './travelAnimation.js';
 
 export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
     const status = useScript(
@@ -285,6 +288,50 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         );
         canvas.requestPointerLock({unadjustedMovement: true});
     };
+
+    // Essential to animate anything
+    const anim = new TravelAnimation();
+    // Actual sequence of animation
+    const animAerialScrew = useCallback(async () => {
+        await anim.init();
+
+        // Gets the children of the object to animate
+        const aerialScrew = await SDK3DVerse.engineAPI.findEntities("aerialScrew" /*Eventually, to be swaped with a UUID*/);
+        const ASOchilds = await aerialScrew[0].getChildren();
+
+        // Separates the children component so the function calls are remotely readable lol
+        const ASOmesh = ASOchilds.find(entity => entity.getName() === "mesh");
+        const ASOtakeoffSpline = ASOchilds.find(entity => entity.getName() === "takeoff_spline");
+        const ASOhoverSpline = ASOchilds.find(entity => entity.getName() === "hover_spline");
+
+        // I suspect anim to know every spline in the entire project, so we can use it as a spline bank (see anim.init(), I could be wrong tho)
+        // Makes sure the spline exists
+        var travellingSpline = anim.splines.find(spline => spline.parentEntity.getEUID() === aerialScrew.getEUID());
+        if(!travellingSpline)
+        { 
+            console.log("Missing spline inside of aerialScrew entity ! (takeoff_spline)");
+            return;
+        }
+        
+        // Maybe possible to call gotoSplineAndTravel directly with either ASOtakeoffSpline or ASOhoverSpline
+        // Not sure that passing by travellingSpline has any other use but make the if() readable...
+        anim.gotoSplineAndTravel(ASOmesh, ASOtakeoffSpline, 1, 0);
+
+        // Same but with the infinite animation hovering around the building
+        travellingSpline = anim.splines.find(spline => spline.parentEntity.getEUID() === aerialScrew.getEUID());
+        if(!travellingSpline)
+        { 
+            console.log("Missing spline inside of aerialScrew entity ! (hover_spline)");
+            return;
+        }
+
+        // Very bad way (probably) to animate forever
+        while(true /*Maybe use some secret input to stop that ?*/)
+        {
+            // Note that the effect won't work if the spline isn't perfectly closed on itself
+            anim.gotoSplineAndTravel(ASOmesh, ASOhoverSpline, 1, 0)
+        }
+    }, [anim]);
 
     // Initialize the app when the page loads
     useEffect(() => {
