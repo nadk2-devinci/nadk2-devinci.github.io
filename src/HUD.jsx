@@ -23,7 +23,7 @@ export function CardCanvas({ setCardState, cardState }){
       <div className='margin'>
         <Image className='cust-button' src={Basique} onClick={() => handleCardChange(0)} />
         <Image className='cust-button' src={Interaction} onClick={() => handleCardChange(1)} /><br/>
-        <Image className='cust-button2' src={Rotation} onClick={() => handleCardChange(2)} />
+        <Image className='cust-button' src={Rotation} onClick={() => handleCardChange(2)} />
       </div>
 
       {cardState === 0 && <Image className='controls fluid text-center' src={BasiqueCard} />}
