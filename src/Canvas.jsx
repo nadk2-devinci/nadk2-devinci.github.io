@@ -103,6 +103,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
     }, [buildHelicopter]);
 
     const bluePrintInterract = useCallback((target) => {
+        
         const moveHandler = (e) => moveToWorkbench(e, canvas, target);
 
         let canvas = document.getElementById("display-canvas");
@@ -154,7 +155,7 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         if(e.button === 0){
             // Screen Space Ray on the middle of the screen
             // This stores an [object Promise] in the JS variable
-            let objectClicked = await SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width/2, canvas.height/2, true, false, false);
+            let objectClicked = await SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width/2, canvas.height/2, false, false, false);
             console.log(objectClicked.entity.getComponent("debug_name"))
             if(objectClicked.entity != null)
             {
@@ -251,11 +252,28 @@ export function Canvas({ showLock, setIsLoading, handleCanvasChange }) {
         
         // Set the action map
         SDK3DVerse.actionMap.values["JUMP"] = [["KEY_32"]];
+        SDK3DVerse.actionMap.values["SPRINT"] = [["KEY_16"]];
         SDK3DVerse.actionMap.propagate();
 
         // Lock the camera on mouse click
         canvas.addEventListener('mousedown', () => setPointerLock(canvas));
-        
+
+        setInterval(async () => {
+            const objectTargeted = await SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width/2, canvas.height/2, false, false, false);
+            if(objectTargeted.entity && objectTargeted.entity.isAttached("tags")) {
+                const tags = objectTargeted.entity.getComponent("tags").value;
+                if(tags.includes("interactable")){
+                    objectTargeted.entity.select();
+                    window.selectedInteractable = objectTargeted.entity
+                    return;
+                }
+            }
+            if(window.selectedInteractable) {
+                SDK3DVerse.engineAPI.updateSelectedEntities([window.selectedInteractable], true, 'unselect');
+                window.selectedInteractable = null;
+            }
+        }, 400);
+
         await InitFirstPersonController(characterControllerSceneUUID, spawnPosition);
 
         canvas.addEventListener('click', (e) => focusObject(e, canvas));
