@@ -8,3 +8,4 @@ export const characterControllerSceneUUID = "7531fd31-458e-41e1-b6a3-b2978f41323
 
 //export const spawnPosition = [0, 0, 0]; //Test Scene Spawn Position
 export const spawnPosition = [19, 11.4, 0]; //Main Scene Spawn Position
+//[19, 11.4, 0]
