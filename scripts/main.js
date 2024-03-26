@@ -216,7 +216,6 @@ const interact = async (event, canvas, characterController) => {
         let objectClicked = await SDK3DVerse.engineAPI.castScreenSpaceRay(canvas.width/2, canvas.height/2, false, false, false);
         if(objectClicked.entity != null)
         {
-            const scriptMapComponent = objectClicked.entity.getComponent('script_map'); //should use SDK3DVerseUtils to clone the component content instead
             if (objectClicked.entity.getComponent("debug_name").value === "Code") {
                 showLockModal(characterController);
             }
@@ -224,6 +223,7 @@ const interact = async (event, canvas, characterController) => {
                 //let objectParent = objectClicked.entity.getParent();
                 //const initialPosition = objectParent.getGlobalTransform();
                 //const playerTransform = SDK3DVerse.engineAPI.cameraAPI.getActiveViewports()[0].getTransform();
+                const scriptMapComponent = objectClicked.entity.getComponent('script_map'); //should use SDK3DVerseUtils to clone the component content instead
                 let entity = (await SDK3DVerse.engineAPI.findEntitiesByEUID("9fa45d12-24cd-4b4c-b2f1-c875336efc4a"))[0];
                 SDK3DVerse.engineAPI.assignClientToScripts(entity);
                 SDK3DVerse.engineAPI.detachClientFromScripts(characterController);
