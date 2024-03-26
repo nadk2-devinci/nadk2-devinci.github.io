@@ -77,7 +77,9 @@ async function initApp() {
     });
 
     setTimeout(() => {
+        console.log("Simulation started")
         SDK3DVerse.engineAPI.startSimulation();
+        document.getElementById("loading-screen").classList.remove('active');
     }, 9000);
 
 }

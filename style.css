@@ -12,6 +12,34 @@
   }
 }
 
+.loading-screen {
+  visibility: hidden;
+  z-index: 10;
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  /* background-color: LightSalmon; */
+  background-image: url('images/LeonardDeVinci_Amphi.jpg');
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+}
+
+.loading-screen.active {
+  visibility: visible;
+}
+
+.loading-font {
+  white-space: nowrap;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, .5);
+  border-radius: 5px;
+}
+
 body {
   width: 100vw;
   height: 100dvh;
